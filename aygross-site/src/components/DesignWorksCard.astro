@@ -1,0 +1,76 @@
+---
+import Card from "./Card/index.astro";
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import DarkroomEdits from "../assets/aygross/darkroom-edits.jpg";
+import PupOnTech from "../assets/aygross/pup-on-tech.jpg";
+import AYGPhotography from "../assets/aygross/ayg-photography.jpg";
+
+const projects = [
+  {
+    name: "Darkroom Edits",
+    url: "https://www.darkroomedits.com",
+    image: DarkroomEdits,
+    alt: "Darkroom Edits portrait and photo editing site preview",
+  },
+  {
+    name: "Pup on Tech",
+    url: "https://www.pupontech.com",
+    image: PupOnTech,
+    alt: "Pup on Tech site preview",
+  },
+  {
+    name: "AY Gross Photography",
+    url: "https://www.aygrossphotography.com",
+    image: AYGPhotography,
+    alt: "AY Gross Photography gallery site preview",
+  },
+];
+---
+
+<Card colSpan="md:col-span-2 lg:col-span-2" rowSpan="md:row-span-3 lg:row-span-3" title="Work">
+  <div class="flex flex-col justify-between h-full w-full gap-3">
+    <p class="text-xs sm:text-sm text-darkslate-200 font-normal leading-relaxed -mt-1">
+      My main projects right now.
+    </p>
+
+    <div class="grid grid-cols-1 gap-2.5 sm:grid-cols-3 sm:gap-3">
+      {
+        projects.map((project) => (
+          <a
+            href={project.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group/item flex flex-col overflow-hidden rounded-xl border border-darkslate-400/50 bg-darkslate-600/80 p-1.5 transition-all duration-200 hover:border-primary-500/80 hover:shadow-md hover:shadow-primary-500/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+          >
+            <div class="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-lg bg-darkslate-900/40">
+              <Image
+                src={project.image}
+                widths={[240, 480, 720]}
+                sizes="(max-width: 640px) 100vw, 240px"
+                class="h-full w-full object-contain p-1 transition-transform duration-300 group-hover/item:scale-[1.02]"
+                alt={project.alt}
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div class="mt-1.5 flex items-center justify-between px-1 py-0.5">
+              <span class="text-xs font-semibold text-darkslate-50 group-hover/item:text-primary-400 transition-colors truncate">
+                {project.name}
+              </span>
+              <Icon
+                name="ri:arrow-right-up-line"
+                class="h-3.5 w-3.5 shrink-0 text-darkslate-200 group-hover/item:text-primary-400 transition-colors"
+              />
+            </div>
+            <span class="sr-only">(opens in a new tab)</span>
+          </a>
+        ))
+      }
+    </div>
+
+  </div>
+</Card>
+
+
+

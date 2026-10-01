@@ -1,0 +1,131 @@
+---
+import Card from "./Card/index.astro";
+---
+
+<Card colSpan="md:col-span-1" rowSpan="md:row-span-3">
+  <div class="h-full flex flex-col justify-start gap-4">
+    <h2 class="text-2xl sm:text-3xl font-bold text-darkslate-50 text-center tracking-tight">
+      Contact
+    </h2>
+
+    <div class="contact-desk-shell letterbird-form w-full overflow-hidden rounded-2xl border border-darkslate-400/50 bg-darkslate-600 shadow-sm transition duration-300">
+      <div class="letterbird-container p-2 sm:p-3">
+        <noscript>
+          <div class="p-4 text-center text-sm text-darkslate-200">
+            <p class="mb-2 font-medium text-darkslate-50">Get in touch directly:</p>
+            <a
+              href="mailto:avrohomygross@gmail.com"
+              class="inline-block rounded-lg border border-darkslate-400 bg-darkslate-600 px-3 py-1.5 text-xs font-medium text-primary-400 hover:text-primary-300 hover:border-primary-500 transition-colors"
+            >
+              avrohomygross@gmail.com
+            </a>
+          </div>
+        </noscript>
+      </div>
+    </div>
+
+  </div>
+</Card>
+
+<script>
+  function initContactsCard() {
+    const shell = document.querySelector(".contact-desk-shell");
+    if (!shell || shell.getAttribute("data-letterbird-initialized") === "true") return;
+
+    const loadLetterbird = () => {
+      if (shell.getAttribute("data-letterbird-initialized") === "true") return;
+      shell.setAttribute("data-letterbird-initialized", "true");
+
+      const container = shell.querySelector(".letterbird-container") || shell;
+
+      const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+          for (const node of mutation.addedNodes) {
+            if (node instanceof HTMLIFrameElement) {
+              node.setAttribute("title", "Contact Form");
+            } else if (node instanceof HTMLElement) {
+              const iframe = node.querySelector("iframe");
+              if (iframe) {
+                iframe.setAttribute("title", "Contact Form");
+              } else {
+                continue;
+              }
+            } else {
+              continue;
+            }
+
+            observer.disconnect();
+            return;
+          }
+        }
+      });
+
+      const existingIframe = container.querySelector("iframe");
+      if (existingIframe) {
+        existingIframe.setAttribute("title", "Contact Form");
+      } else {
+        observer.observe(container, { childList: true, subtree: true });
+      }
+
+      const script = document.createElement("script");
+      script.src = "https://letterbird.co/embed/v1.js";
+      script.async = true;
+      script.setAttribute("data-letterbirduser", "avrohomygross");
+      script.setAttribute("data-width", "100%");
+      script.setAttribute("data-showheader", "false");
+      container.appendChild(script);
+    };
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              loadLetterbird();
+              observer.disconnect();
+            }
+          });
+        },
+        { rootMargin: "200px" }
+      );
+      observer.observe(shell);
+    } else {
+      loadLetterbird();
+    }
+  }
+
+  initContactsCard();
+  document.addEventListener("astro:page-load", initContactsCard);
+</script>
+
+<style is:global>
+  .contact-desk-shell {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .contact-desk-shell::before {
+    content: "";
+    display: block;
+    height: 3px;
+    background: var(--primary-500);
+  }
+
+  .contact-desk-shell,
+  .letterbird-form {
+    opacity: 1;
+    border: 1px solid var(--darkslate-400);
+    background: var(--darkslate-600);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08), 0 8px 24px rgb(0 0 0 / 0.12);
+  }
+
+  .letterbird-form iframe {
+    display: block;
+    width: 100% !important;
+    max-width: 100%;
+    border: 0;
+    border-radius: 0.875rem;
+    background: var(--darkslate-600);
+    opacity: 1;
+  }
+</style>

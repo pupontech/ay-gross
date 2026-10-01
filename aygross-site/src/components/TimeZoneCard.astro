@@ -1,0 +1,176 @@
+---
+import Card from "./Card/index.astro";
+import { SITE } from "../site-config";
+
+const now = new Date();
+const initialIsraelTime = new Intl.DateTimeFormat("en-US", {
+  hour: "numeric",
+  minute: "2-digit",
+  hour12: true,
+  timeZone: SITE.location.timezone,
+}).format(now);
+const initialIsoTime = now.toISOString();
+
+function getTimezoneAbbreviation(timezone: string, date: Date): string {
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    timeZone: timezone,
+    timeZoneName: "short",
+  });
+  const parts = formatter.formatToParts(date);
+  const tzName = parts.find((part) => part.type === "timeZoneName");
+  return tzName ? tzName.value : timezone.split("/").pop() || timezone;
+}
+
+const initialHomeTzAbbr = getTimezoneAbbreviation(SITE.location.timezone, now);
+---
+
+<script>
+  let intervalId: number | undefined;
+  let homeTimezone = "";
+
+  function getHomeTimezoneFromDom(): string {
+    const el = document.getElementById("homeTzDisplay");
+    const tz = (el as HTMLSpanElement | null)?.dataset?.timezone;
+    return tz || "";
+  }
+
+  function getVisitorTimezone(): string {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone;
+  }
+
+  function uses24HourFormat(): boolean {
+    const formatter = new Intl.DateTimeFormat(navigator.language, {
+      hour: "numeric",
+    });
+    const parts = formatter.formatToParts(new Date());
+    const hourPart = parts.find((part) => part.type === "hour");
+    return hourPart ? !parts.some((part) => part.type === "dayPeriod") : false;
+  }
+
+  function formatTimeForTimezone(date: Date, timezone: string, use24Hour: boolean): string {
+    const options: Intl.DateTimeFormatOptions = {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: !use24Hour,
+      timeZone: timezone,
+    };
+    return new Intl.DateTimeFormat(navigator.language, options).format(date);
+  }
+
+  function getTimezoneAbbreviation(timezone: string, date: Date): string {
+    const formatter = new Intl.DateTimeFormat("en-US", {
+      timeZone: timezone,
+      timeZoneName: "short",
+    });
+    const parts = formatter.formatToParts(date);
+    const tzName = parts.find((part) => part.type === "timeZoneName");
+    return tzName ? tzName.value : timezone.split("/").pop() || timezone;
+  }
+
+  function updateClock() {
+    const italyTimeDisplay = document.getElementById("italyTimeDisplay");
+    const visitorTimeDisplay = document.getElementById("visitorTimeDisplay");
+    const visitorTzDisplay = document.getElementById("visitorTzDisplay");
+    const homeTzDisplay = document.getElementById("homeTzDisplay");
+
+    if (!homeTimezone) homeTimezone = getHomeTimezoneFromDom() || "Asia/Jerusalem";
+
+    const visitorTimezone = getVisitorTimezone();
+    const now = new Date();
+    const use24Hour = uses24HourFormat();
+
+    if (italyTimeDisplay) {
+      italyTimeDisplay.textContent = formatTimeForTimezone(now, homeTimezone, use24Hour);
+      italyTimeDisplay.setAttribute("datetime", now.toISOString());
+    }
+
+    if (visitorTimeDisplay) {
+      visitorTimeDisplay.textContent = formatTimeForTimezone(now, visitorTimezone, use24Hour);
+      visitorTimeDisplay.setAttribute("datetime", now.toISOString());
+    }
+
+    if (visitorTzDisplay) {
+      visitorTzDisplay.textContent = getTimezoneAbbreviation(visitorTimezone, now);
+    }
+
+    if (homeTzDisplay) {
+      homeTzDisplay.textContent = getTimezoneAbbreviation(homeTimezone, now);
+    }
+  }
+
+  function startClock() {
+    if (intervalId) return;
+    updateClock();
+    intervalId = window.setInterval(updateClock, 60_000);
+  }
+
+  function stopClock() {
+    if (intervalId) {
+      window.clearInterval(intervalId);
+      intervalId = undefined;
+    }
+  }
+
+  function handleVisibilityChange() {
+    if (document.hidden) stopClock();
+    else startClock();
+  }
+
+  function initClock() {
+    if (!document.hidden) startClock();
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initClock, { once: true });
+  } else {
+    initClock();
+  }
+
+  window.addEventListener(
+    "pagehide",
+    () => {
+      stopClock();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    },
+    { once: true }
+  );
+</script>
+
+<Card colSpan="col-span-1" height="aspect-square" padding="p-3 sm:p-4">
+  <div class="flex h-full flex-col items-center justify-center gap-5 text-center">
+    <div class="flex flex-col items-center">
+      <span class="m-0 text-xs font-semibold uppercase tracking-wider text-darkslate-200">AY’s Time</span>
+      <div class="mt-1 flex items-center justify-center gap-2">
+        <time
+          datetime={initialIsoTime}
+          id="italyTimeDisplay"
+          class="whitespace-nowrap text-2xl font-bold tabular-nums tracking-tight text-darkslate-50 sm:text-3xl"
+        >
+          {initialIsraelTime}
+        </time>
+        <span
+          id="homeTzDisplay"
+          data-timezone={SITE.location.timezone}
+          class="rounded-md border border-primary-300 bg-primary-200 px-2 py-1 text-[0.6875rem] font-semibold text-primary-900 shadow-sm"
+        >
+          {initialHomeTzAbbr}
+        </span>
+      </div>
+    </div>
+
+    <div class="flex flex-col items-center">
+      <span class="m-0 text-xs font-semibold uppercase tracking-wider text-darkslate-200">your time</span>
+      <div class="mt-1 flex items-center justify-center gap-2">
+        <time
+          datetime={initialIsoTime}
+          id="visitorTimeDisplay"
+          class="whitespace-nowrap text-2xl font-bold tabular-nums tracking-tight text-darkslate-50 sm:text-3xl"
+        >
+          {initialIsraelTime}
+        </time>
+        <span id="visitorTzDisplay" class="rounded-md border border-primary-300 bg-primary-200 px-2 py-1 text-[0.6875rem] font-semibold text-primary-900 shadow-sm">---</span>
+      </div>
+    </div>
+  </div>
+</Card>

@@ -1,0 +1,153 @@
+---
+import Card from "./Card/index.astro";
+import { Icon } from "astro-icon/components";
+
+const lastfmApiKey = import.meta.env.PUBLIC_LASTFM_API_KEY;
+---
+
+<Card colSpan="md:col-span-1 lg:col-span-1" rowSpan="md:row-span-1 lg:row-span-1" padding="p-4 sm:p-5">
+  <div class="flex h-full w-full flex-col justify-between gap-3">
+    <div class="flex items-center justify-between gap-3">
+      <h2 class="m-0 text-base font-bold tracking-tight text-darkslate-50 sm:text-lg">Now listening to</h2>
+    </div>
+
+    <a
+      id="now-listening-track"
+      href="https://pupontech.com/music/"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="group hidden min-w-0 items-center gap-3 rounded-xl border border-darkslate-400/40 bg-darkslate-600/50 p-2.5 transition-colors hover:border-primary-500/70 hover:bg-darkslate-600/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+    >
+      <div class="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-darkslate-400/30 bg-darkslate-900/60">
+        <img
+          id="now-listening-art"
+          src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+          alt=""
+          width="48"
+          height="48"
+          loading="lazy"
+          decoding="async"
+          class="hidden h-full w-full object-cover"
+        />
+        <Icon id="now-listening-art-fallback" name="ri:disc-line" class="h-6 w-6 text-darkslate-200" />
+      </div>
+      <div class="min-w-0 flex-1">
+        <div class="flex items-center gap-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-darkslate-200">
+          <span id="now-listening-dot" class="hidden h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span id="now-listening-status">Last played</span>
+        </div>
+        <div id="now-listening-title" class="truncate text-sm font-semibold text-darkslate-50 transition-colors group-hover:text-primary-400"></div>
+        <div id="now-listening-artist" class="truncate text-xs text-darkslate-200"></div>
+      </div>
+      <Icon name="ri:arrow-right-up-line" class="h-4 w-4 shrink-0 text-darkslate-200 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary-400" />
+    </a>
+
+    <a
+      id="now-listening-fallback"
+      href="https://pupontech.com/music/"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="text-xs text-darkslate-200 underline decoration-darkslate-400 underline-offset-4 transition-colors hover:text-primary-400 hover:decoration-primary-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+    >
+      See what I have been listening to →
+    </a>
+  </div>
+</Card>
+
+<script is:inline define:vars={{ apiKey: lastfmApiKey }}>
+  (() => {
+    if (!apiKey || typeof apiKey !== "string" || !apiKey.trim()) return;
+
+    const trackLink = document.getElementById("now-listening-track");
+    const fallback = document.getElementById("now-listening-fallback");
+    const art = document.getElementById("now-listening-art");
+    const artFallback = document.getElementById("now-listening-art-fallback");
+    const dot = document.getElementById("now-listening-dot");
+    const status = document.getElementById("now-listening-status");
+    const title = document.getElementById("now-listening-title");
+    const artist = document.getElementById("now-listening-artist");
+
+    if (!trackLink || !fallback || !art || !artFallback || !dot || !status || !title || !artist) return;
+
+    const user = "PuponTech";
+    const endpoint = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${user}&api_key=${encodeURIComponent(apiKey.trim())}&format=json&limit=1`;
+    let intervalId;
+    let refreshInFlight = false;
+
+    async function refreshListening() {
+      if (refreshInFlight) return;
+      refreshInFlight = true;
+
+      try {
+        const response = await fetch(endpoint);
+        if (!response.ok) return;
+        const data = await response.json();
+        const rawTracks = data?.recenttracks?.track;
+        const track = Array.isArray(rawTracks) ? rawTracks[0] : rawTracks;
+        const trackTitle = track?.name;
+        const trackArtist = typeof track?.artist === "object" ? track.artist["#text"] : track?.artist;
+        if (!trackTitle || !trackArtist) return;
+
+        const isPlaying = track?.["@attr"]?.nowplaying === "true";
+        const cover = Array.isArray(track.image)
+          ? (track.image.find((image) => image.size === "medium")?.["#text"] || track.image.find((image) => image.size === "large")?.["#text"] || "")
+          : "";
+
+        title.textContent = trackTitle;
+        artist.textContent = trackArtist;
+        status.textContent = isPlaying ? "Now playing" : "Last played";
+        dot.classList.toggle("hidden", !isPlaying);
+        trackLink.href = track.url || "https://pupontech.com/music/";
+
+        if (cover) {
+          art.alt = `Album art for ${trackTitle} by ${trackArtist}`;
+          art.onload = () => {
+            art.classList.remove("hidden");
+            artFallback.classList.add("hidden");
+          };
+          art.onerror = () => {
+            art.classList.add("hidden");
+            artFallback.classList.remove("hidden");
+          };
+          art.src = cover;
+        }
+
+        trackLink.classList.remove("hidden");
+        trackLink.classList.add("flex");
+        fallback.classList.add("hidden");
+      } catch {
+        // Keep the static Pup on Tech link visible.
+      } finally {
+        refreshInFlight = false;
+      }
+    }
+
+    function startPolling() {
+      if (intervalId) return;
+      refreshListening();
+      intervalId = window.setInterval(refreshListening, 30_000);
+    }
+
+    function stopPolling() {
+      if (!intervalId) return;
+      window.clearInterval(intervalId);
+      intervalId = undefined;
+    }
+
+    function handleVisibilityChange() {
+      if (document.hidden) stopPolling();
+      else startPolling();
+    }
+
+    if (!document.hidden) startPolling();
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener(
+      "pagehide",
+      () => {
+        stopPolling();
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+      },
+      { once: true }
+    );
+  })();
+</script>

@@ -1,0 +1,51 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Card from "../components/Card/index.astro";
+import { SITE, buildPageTitle } from "../site-config";
+---
+
+<Layout
+  title={buildPageTitle("About")}
+  description="Learn more about AY Gross, a photographer, photo editor, and IT consultant building web projects and visual media."
+>
+  <main class="m-auto w-full max-w-5xl p-4 sm:p-6 lg:p-8">
+    <div class="mb-6">
+      <div>
+        <p class="text-sm text-darkslate-200">About and contact</p>
+        <h1 class="text-4xl font-bold text-darkslate-50">About</h1>
+      </div>
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      <Card title="About me" colSpan="md:col-span-1" rowSpan="md:row-span-2">
+        <div class="space-y-3 text-sm font-light">
+          <p>
+            I love all things tech, photography, coffee, fishing, and dogs.
+          </p>
+          <p>
+            I build websites, shoot photos, and work on small side projects whenever I can.
+          </p>
+          <p>
+            This site is a home base for those things.
+          </p>
+        </div>
+      </Card>
+
+      <Card title="Contact" colSpan="md:col-span-1" rowSpan="md:row-span-2">
+        <div id="contact" class="space-y-3 text-sm font-light">
+          <p>Feel free to reach out anytime.</p>
+          <p>
+            Email:
+            <a href={SITE.links.email} class="text-[var(--accent-text)]">{SITE.links.email.replace('mailto:', '')}</a>
+          </p>
+          <ul class="space-y-1">
+            <li><a href={SITE.links.facebook} target="_blank" rel="noreferrer">Facebook</a></li>
+            <li><a href={SITE.links.mastodon} target="_blank" rel="noreferrer">Mastodon</a></li>
+            <li><a href={SITE.links.telegram} target="_blank" rel="noreferrer">Telegram</a></li>
+            <li><a href={SITE.links.wishlist} target="_blank" rel="noreferrer">Wishlist</a></li>
+          </ul>
+        </div>
+      </Card>
+    </div>
+  </main>
+</Layout>

@@ -1,0 +1,15 @@
+---
+import Card from "./Card/index.astro";
+import ThemeControls from "./ThemeControls.astro";
+---
+
+<Card colSpan="col-span-1" height="aspect-square" padding="p-3 sm:p-4">
+  <div class="flex h-full flex-col items-center justify-between text-center">
+    <div>
+      <p class="m-0 text-xs font-semibold uppercase tracking-wider text-darkslate-200">Theme</p>
+      <p class="m-0.5 text-sm font-semibold text-darkslate-50" data-theme-name>Indigo · light</p>
+    </div>
+    <ThemeControls />
+    <p class="m-0 text-[0.625rem] leading-relaxed text-darkslate-200">Choose a color mood</p>
+  </div>
+</Card>

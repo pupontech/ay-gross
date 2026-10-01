@@ -1,0 +1,283 @@
+@font-face {
+  font-family: "Maple Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/maple-mono-400.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Maple Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/maple-mono-500.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Maple Mono";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/maple-mono-600.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Maple Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/maple-mono-700.woff2") format("woff2");
+}
+
+:root {
+  /* Indigo is a light theme: 700 is the page surface and 500 is the card surface. */
+  --darkslate-50: #0f172a;
+  --darkslate-100: #1e293b;
+  --darkslate-200: #334155;
+  --darkslate-300: #475569;
+  --darkslate-400: #64748b;
+  --darkslate-500: #ffffff;
+  --darkslate-600: #f8fafc;
+  --darkslate-700: #eef2ff;
+  --darkslate-800: #e0e7ff;
+  --darkslate-900: #c7d2fe;
+
+  --primary-100: #e0e7ff;
+  --primary-200: #c7d2fe;
+  --primary-300: #a5b4fc;
+  --primary-400: #818cf8;
+  --primary-500: #6366f1;
+  --primary-600: #4f46e5;
+  --primary-700: #4338ca;
+  --primary-800: #3730a3;
+  --primary-900: #1e1b4b;
+  --accent-text: #4338ca;
+
+  --font-sans: "Maple Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.pink-theme,
+.yellow-theme {
+  --darkslate-50: #ffffff;
+  --darkslate-100: #fff7fb;
+  --darkslate-200: #f3d5ea;
+  --darkslate-300: #c49cb9;
+  --darkslate-400: #5e3852;
+  --darkslate-500: #3b1f32;
+  --darkslate-600: #2a1423;
+  --darkslate-700: #230c1b;
+  --darkslate-800: #170812;
+  --darkslate-900: #0f040b;
+
+  --primary-100: #fce7f3;
+  --primary-200: #fbcfe8;
+  --primary-300: #f9a8d4;
+  --primary-400: #f472b6;
+  --primary-500: #ec4899;
+  --primary-600: #db2777;
+  --primary-700: #be185d;
+  --primary-800: #9d174d;
+  --primary-900: #831843;
+  --accent-text: #f9a8d4;
+}
+
+.cyan-theme,
+.blue-theme {
+  /* Cyan is a light theme: 700 is the page surface and 500 is the card surface. */
+  --darkslate-50: #083344;
+  --darkslate-100: #0e4f5f;
+  --darkslate-200: #155e75;
+  --darkslate-300: #2e7082;
+  --darkslate-400: #4a8997;
+  --darkslate-500: #ffffff;
+  --darkslate-600: #ecfeff;
+  --darkslate-700: #cffafe;
+  --darkslate-800: #a5f3fc;
+  --darkslate-900: #e0f2fe;
+
+  --primary-100: #cffaff;
+  --primary-200: #a5f3fc;
+  --primary-300: #67e8f9;
+  --primary-400: #22d3ee;
+  --primary-500: #06b6d4;
+  --primary-600: #0891b2;
+  --primary-700: #0e7490;
+  --primary-800: #155e75;
+  --primary-900: #164e63;
+  --accent-text: #155e75;
+}
+
+.apricot-theme,
+.amber-theme {
+  /* Apricot is a light theme: 700 is the page surface and 500 is the card surface. */
+  --darkslate-50: #451a03;
+  --darkslate-100: #78350f;
+  --darkslate-200: #92400e;
+  --darkslate-300: #b45309;
+  --darkslate-400: #d97706;
+  --darkslate-500: #ffffff;
+  --darkslate-600: #fff8f0;
+  --darkslate-700: #ffedd5;
+  --darkslate-800: #fed7aa;
+  --darkslate-900: #fdba74;
+
+  --primary-100: #ffedd5;
+  --primary-200: #fed7aa;
+  --primary-300: #fdba74;
+  --primary-400: #fb923c;
+  --primary-500: #f97316;
+  --primary-600: #ea580c;
+  --primary-700: #c2410c;
+  --primary-800: #9a3412;
+  --primary-900: #7c2d12;
+  --accent-text: #9a3412;
+}
+
+.purple-theme {
+  --darkslate-50: #ffffff;
+  --darkslate-100: #fbf9ff;
+  --darkslate-200: #e2d1f7;
+  --darkslate-300: #997bbd;
+  --darkslate-400: #573778;
+  --darkslate-500: #331c4b;
+  --darkslate-600: #241138;
+  --darkslate-700: #1a0a2a;
+  --darkslate-800: #11051c;
+  --darkslate-900: #0a0212;
+
+  --primary-100: #f3e8ff;
+  --primary-200: #e9d5ff;
+  --primary-300: #d8b4fe;
+  --primary-400: #c084fc;
+  --primary-500: #a855f7;
+  --primary-600: #9333ea;
+  --primary-700: #7e22ce;
+  --primary-800: #6b21a8;
+  --primary-900: #581c87;
+  --accent-text: #d8b4fe;
+}
+
+.green-theme {
+  --darkslate-50: #ffffff;
+  --darkslate-100: #f2fdf7;
+  --darkslate-200: #bcebd4;
+  --darkslate-300: #6ba88b;
+  --darkslate-400: #2f614a;
+  --darkslate-500: #153e2d;
+  --darkslate-600: #0e2c1f;
+  --darkslate-700: #092016;
+  --darkslate-800: #05150e;
+  --darkslate-900: #020b07;
+
+  --primary-100: #d1fae5;
+  --primary-200: #a7f3d0;
+  --primary-300: #6ee7b7;
+  --primary-400: #34d399;
+  --primary-500: #10b981;
+  --primary-600: #059669;
+  --primary-700: #047857;
+  --primary-800: #065f46;
+  --primary-900: #064e3b;
+  --accent-text: #6ee7b7;
+}
+
+html {
+  overscroll-behavior: none;
+}
+
+body {
+  min-height: 100vh;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+body::before {
+  --line-color: var(--darkslate-400);
+  --line-size: 80px;
+  content: "";
+  height: 100vh;
+  width: 101vw;
+  position: fixed;
+  background: linear-gradient(90deg, var(--line-color) 1px, transparent 1px) center /
+      var(--line-size) var(--line-size),
+    linear-gradient(var(--line-color) 1px, transparent 1px) center /
+      var(--line-size) var(--line-size);
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: -1;
+  -webkit-mask: linear-gradient(-360deg, transparent 40%, white);
+  mask: linear-gradient(-360deg, transparent 40%, white);
+  opacity: 0.2;
+  transition: opacity 0.4s ease;
+}
+
+.pink-theme::before,
+.yellow-theme::before,
+.purple-theme::before,
+.green-theme::before {
+  opacity: 0.34;
+}
+
+.card {
+  transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.switchboard {
+  background-color: var(--darkslate-900);
+  padding: 40px;
+  border-radius: 20px;
+  transition: background-color 0.4s ease;
+}
+
+.switchboard .star {
+  width: 1px;
+  height: 1px;
+  border-radius: 100%;
+  position: relative;
+  transition: transform 10ms ease;
+}
+
+.switchboard .star::after,
+.switchboard .star::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  border-radius: inherit;
+  transition: opacity 10ms ease;
+}
+
+.switchboard .star::before {
+  background: var(--primary-500);
+  box-shadow: 0px 0px 2px 1px var(--primary-800);
+}
+
+.switchboard .star::after {
+  background: #ffffff;
+  box-shadow: 0px 0px 1px 1px theme("colors.primary.500"),
+    0px 0px 2px 1px theme("colors.primary.800");
+}
+
+.switchboard .star[data-state="off"] {
+  background: theme("colors.darkslate.300");
+}
+
+.switchboard .star[data-state="medium"]::before {
+  opacity: 1;
+}
+
+.switchboard .star[data-state="high"]::after {
+  opacity: 1;
+}

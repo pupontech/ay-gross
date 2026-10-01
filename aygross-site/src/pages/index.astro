@@ -1,0 +1,51 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Card from "../components/Card/index.astro";
+import IntroCard from "../components/IntroCard.astro";
+import ContactsCard from "../components/ContactsCard.astro";
+import ThemeChangeCard from "../components/ThemeChangeCard.astro";
+
+import TimeZone from "../components/TimeZoneCard.astro";
+
+import Now from "../components/Now.astro";
+import DesignWorksCard from "../components/DesignWorksCard.astro";
+import { buildPageTitle } from "../site-config";
+---
+
+<Layout
+  title={buildPageTitle()}
+  description="AY Gross is a photographer, photo editor, and IT consultant. This is his personal site that acts as a directory of his current sites."
+>
+  <main
+    class="text-darkslate-50 m-auto grid min-h-screen w-full min-w-0 max-w-6xl gap-3 p-3 sm:gap-4 sm:p-4 md:grid-cols-2 md:gap-4 md:p-6"
+  >
+    <IntroCard />
+
+    <div class="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:col-span-1">
+      <TimeZone />
+      <ThemeChangeCard />
+    </div>
+    <ContactsCard />
+    <Now />
+    <Card
+      href="https://pupontech.com/techreccs"
+      target="_blank"
+      rel="noopener noreferrer"
+      colSpan="md:col-span-1 lg:col-span-1"
+      rowSpan="md:row-span-1 lg:row-span-1"
+      padding="p-4 sm:p-5"
+      title="What I recommend"
+      showIcon={false}
+    >
+      <div class="flex h-full flex-col justify-between gap-4">
+        <p class="m-0 text-xs font-normal leading-relaxed text-darkslate-200 sm:text-sm">
+          The best Software and Hardware recommendations on the internet. Brought to you by pupontech.com
+        </p>
+        <span class="text-xs font-semibold text-primary-400 transition-colors group-hover:text-primary-300">
+          View techreccs ↗
+        </span>
+      </div>
+    </Card>
+    <DesignWorksCard />
+  </main>
+</Layout>

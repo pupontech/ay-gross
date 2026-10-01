@@ -1,0 +1,72 @@
+---
+import { Icon } from "astro-icon/components";
+import Content from "./Content.astro";
+
+interface Props {
+  title?: string;
+  body?: string;
+  colSpan?: string;
+  rowSpan?: string;
+  href?: string;
+  target?: string;
+  rel?: string;
+  colorText?: string;
+  height?: string;
+  padding?: string;
+  bgColor?: string;
+  showIcon?: boolean;
+}
+
+const {
+  title,
+  body,
+  colSpan,
+  rowSpan,
+  href,
+  target,
+  rel,
+  colorText,
+  height,
+  padding,
+  bgColor,
+  showIcon = true,
+} = Astro.props;
+
+const isExternal = href?.startsWith("http://") || href?.startsWith("https://");
+const computedTarget = target ?? (isExternal ? "_blank" : undefined);
+const computedRel = rel ?? (isExternal ? "noopener noreferrer" : undefined);
+---
+
+<div
+  class={`card group box-border overflow-hidden text-darkslate-50 ${bgColor || "bg-darkslate-500/90"} backdrop-blur-sm shadow-md shadow-black/30 rounded-2xl border border-darkslate-400/50 hover:border-primary-500/80 hover:shadow-lg hover:shadow-primary-500/5 focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-primary-500/40 align-start flex-none ${
+    height || "h-full"
+  } justify-start relative transform perspective-1200 w-full transition-all duration-300 ease-out ${
+    colSpan || "md:col-span-2"
+  } ${rowSpan || ""} ${padding || "p-4 sm:p-5 lg:p-5"}`}
+>
+  {
+    href ? (
+      <a
+        class={`h-full w-full flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-2xl ${colorText || ""}`}
+        href={href}
+        target={computedTarget}
+        rel={computedRel}
+      >
+        {showIcon && (
+          <Icon
+            class="h-5 w-5 absolute top-4 right-4 sm:top-5 sm:right-5 text-darkslate-200 group-hover:text-primary-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200 z-20"
+            name="ri:arrow-right-up-line"
+          />
+        )}
+        <Content body={body} title={title}>
+          <slot />
+        </Content>
+        {isExternal && <span class="sr-only">(opens in a new tab)</span>}
+      </a>
+    ) : (
+      <Content body={body} title={title}>
+        <slot />
+      </Content>
+    )
+  }
+</div>

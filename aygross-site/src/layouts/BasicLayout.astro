@@ -1,0 +1,192 @@
+---
+import "../style.css";
+import { SITE } from "../site-config";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, SITE.site.url).toString();
+const ogImage = "https://aygross.com/og-image.png";
+const ogImageAlt = "AY Gross with Honey — IT consulting, photo editing, and photography";
+
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: SITE.author.fullName,
+    url: SITE.site.url,
+    sameAs: [SITE.links.mastodon],
+    image: ogImage,
+    jobTitle: SITE.author.jobTitle,
+    description:
+      "AY Gross is an IT consultant, photo editor, and photographer. This personal site is a directory of his current work and projects.",
+    knowsAbout: [
+      "Photography",
+      "Photo Editing",
+      "IT Consulting",
+      "Technology",
+      "Website Development",
+    ],
+    worksFor: {
+      "@type": "Organization",
+      name: "Self-Employed",
+      address: {
+        "@type": "PostalAddress",
+        addressCountry: SITE.location.countryCode,
+      },
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE.author.fullName,
+    url: SITE.site.url,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: title,
+    description,
+    url: canonicalURL,
+    isPartOf: {
+      "@type": "WebSite",
+      name: SITE.author.fullName,
+      url: SITE.site.url,
+    },
+  },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width" name="viewport" />
+    <link href="/favicon.ico" rel="icon" type="image/x-icon" />
+    <link rel="preload" href="/fonts/maple-mono-400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/maple-mono-500.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/maple-mono-600.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/maple-mono-700.woff2" as="font" type="font/woff2" crossorigin />
+    <meta content={Astro.generator} name="generator" />
+    <title>{title}</title>
+    <meta content={description} name="description" />
+    <meta content="index, follow" name="robots" />
+    <meta name="theme-color" content="#eef2ff" />
+    <meta name="author" content={SITE.author.fullName} />
+
+    <meta content="website" property="og:type" />
+    <meta content={title} property="og:title" />
+    <meta content={description} property="og:description" />
+    <meta content={canonicalURL} property="og:url" />
+    <meta property="og:site_name" content={SITE.author.fullName} />
+    <meta property="og:locale" content="en_US" />
+    <meta content={ogImage} property="og:image" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta property="og:image:type" content="image/png" />
+    <meta content="summary_large_image" name="twitter:card" />
+    <meta content={title} name="twitter:title" />
+    <meta content={description} name="twitter:description" />
+    <meta name="twitter:creator" content={`@${SITE.author.twitterHandle}`} />
+    <meta content={ogImage} name="twitter:image" />
+
+    <link href={canonicalURL} rel="canonical" />
+    <script
+      is:inline
+      set:html={JSON.stringify(schema)}
+      type="application/ld+json"
+    />
+    <script is:inline>
+      (function () {
+        const THEME_BACKGROUNDS = {
+          default: "#eef2ff",
+          "pink-theme": "#230c1b",
+          "yellow-theme": "#230c1b",
+          "cyan-theme": "#cffafe",
+          "blue-theme": "#cffafe",
+          "apricot-theme": "#ffedd5",
+          "amber-theme": "#ffedd5",
+          "purple-theme": "#1a0a2a",
+          "green-theme": "#092016",
+        };
+        const ALL_THEMES = [
+          "yellow-theme",
+          "pink-theme",
+          "blue-theme",
+          "cyan-theme",
+          "apricot-theme",
+          "amber-theme",
+          "purple-theme",
+          "green-theme",
+        ];
+
+        function getResolvedTheme() {
+          const savedTheme = localStorage.getItem("theme");
+          if (savedTheme) return savedTheme;
+          const isDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+          return isDark ? "purple-theme" : "default";
+        }
+
+        function applyTheme() {
+          const theme = getResolvedTheme();
+          const docEl = document.documentElement;
+          ALL_THEMES.forEach(function (t) {
+            docEl.classList.remove(t);
+          });
+          if (theme && theme !== "default") {
+            docEl.classList.add(theme);
+          }
+          if (document.body) {
+            ALL_THEMES.forEach(function (t) {
+              document.body.classList.remove(t);
+            });
+            if (theme && theme !== "default") {
+              document.body.classList.add(theme);
+            }
+          }
+          const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+          if (metaThemeColor) {
+            metaThemeColor.setAttribute("content", THEME_BACKGROUNDS[theme] || THEME_BACKGROUNDS.default);
+          }
+        }
+
+        applyTheme();
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", applyTheme);
+        }
+      })();
+    </script>
+  </head>
+  <body class="bg-darkslate-700 flex flex-col justify-center items-center">
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  body {
+    margin: 0;
+    font-family: var(--font-sans, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-sans, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    letter-spacing: -0.025em;
+  }
+  p {
+    font-family: var(--font-sans, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+  }
+
+  b {
+    font-weight: 700 !important;
+  }
+</style>

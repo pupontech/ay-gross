@@ -1,0 +1,92 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Card from "../components/Card/index.astro";
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import DarkroomEdits from "../assets/aygross/darkroom-edits.jpg";
+import PupOnTech from "../assets/aygross/pup-on-tech.jpg";
+import AYGPhotography from "../assets/aygross/ayg-photography.jpg";
+import { buildPageTitle } from "../site-config";
+
+const projects = [
+  {
+    title: "Darkroom Edits",
+    url: "https://www.darkroomedits.com",
+    displayUrl: "darkroomedits.com",
+    body: "Portrait and photo editing.",
+    image: DarkroomEdits,
+    alt: "Darkroom Edits portrait and photo editing website preview",
+  },
+  {
+    title: "Pup on Tech",
+    url: "https://www.pupontech.com",
+    displayUrl: "pupontech.com",
+    body: "A playful tech project with a dog-first vibe.",
+    image: PupOnTech,
+    alt: "Pup on Tech website preview",
+  },
+  {
+    title: "AY Gross Photography",
+    url: "https://www.aygrossphotography.com",
+    displayUrl: "aygrossphotography.com",
+    body: "Photography work and galleries.",
+    image: AYGPhotography,
+    alt: "AY Gross Photography website preview",
+  },
+];
+---
+
+<Layout
+  title={buildPageTitle("Work")}
+  description="Explore selected photography, photo editing, and IT projects by AY Gross, including Darkroom Edits, Pup on Tech, and AY Gross Photography."
+>
+  <main class="m-auto w-full max-w-6xl p-4 sm:p-6 lg:p-8">
+    <div class="mb-6">
+      <div>
+        <p class="text-sm text-darkslate-200">Selected work</p>
+        <h1 class="text-4xl font-bold text-darkslate-50">Work</h1>
+      </div>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      {
+        projects.map((project, index) => (
+          <Card
+            href={project.url}
+            title={project.title}
+            body={project.body}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div class="mt-3 flex flex-col justify-between gap-4">
+              <div class="overflow-hidden rounded-lg">
+                <Image
+                  src={project.image}
+                  alt={project.alt}
+                  widths={[320, 640, 960]}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 360px"
+                  class="aspect-[4/3] w-full rounded-lg object-cover transition-transform duration-300 group-hover:scale-105"
+                  loading={index === 0 ? "eager" : "lazy"}
+                  fetchpriority={index === 0 ? "high" : undefined}
+                  decoding="async"
+                />
+              </div>
+
+              <div class="flex items-center justify-between border-t border-darkslate-400/50 pt-3">
+                <span class="text-xs font-mono text-darkslate-200 group-hover:text-darkslate-100 transition-colors truncate">
+                  {project.displayUrl}
+                </span>
+                <span class="inline-flex items-center gap-1.5 rounded-full border border-darkslate-400 bg-darkslate-600 px-3 py-1 text-xs font-medium text-darkslate-50 transition-all duration-200 group-hover:border-primary-500 group-hover:bg-primary-500">
+                  <span>Visit site</span>
+                  <Icon name="ri:arrow-right-up-line" class="h-3.5 w-3.5" />
+                </span>
+              </div>
+            </div>
+          </Card>
+        ))
+      }
+    </div>
+  </main>
+</Layout>
+
+

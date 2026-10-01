@@ -1,0 +1,29 @@
+---
+interface Props {
+  title?: string;
+  body?: string;
+}
+
+const { title, body } = Astro.props;
+---
+
+<div class="flex flex-col h-full justify-between w-full">
+  {
+    (title || body) && (
+      <div class="flex flex-col mb-2">
+        {title && (
+          <h2 class="text-lg sm:text-xl font-bold text-darkslate-50 tracking-tight m-0 z-20">
+            {title}
+          </h2>
+        )}
+        {body && (
+          <p class="m-0 mt-1 font-normal text-xs sm:text-sm text-darkslate-200 leading-relaxed">
+            {body}
+          </p>
+        )}
+      </div>
+    )
+  }
+  <slot />
+</div>
+
